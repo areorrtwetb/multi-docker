@@ -1,10 +1,20 @@
 language: generic
 sudo: required
-services:
-  - docker
-jobs:
-  include:
-    - stage: Verify Login Credentials
-      script:
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin docker.io
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+services: 
+  -  docker
+before_install:
+  - docker build -t areorrtwetb/react-test -f ./client/Dockerfile.dev ./client
+script:
+  - docker run -e CI=true areorrtwetb/react-test npm run test -- --coverage
+after_success:
+  - docker build -t areorrtwetb/multi-client ./client
+  - docker build -t areorrtwetb/multi-nginx ./nginx
+  - docker build -t areorrtwetb/multi-server ./server
+  - docker build -t areorrtwetb/multi-worker ./worker
+  #LOG IN THE docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin docker.io
+  #Take those iages aand push them to docker hub
+  - docker push areorrtwetb/multi-client
+  - docker push areorrtwetb/multi-nginx
+  - docker push areorrtwetb/multi-server
+  - docker push areorrtwetb/multi-worker
