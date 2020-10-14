@@ -1,0 +1,30 @@
+{
+    "AWSEBDcokerrunVeersion": 2,
+    "containerDefinitions":[
+        {
+            "name": "client",
+            "image": "areorrtwetb/multi-client",
+            "hostname": "client",
+            "essential": false
+
+        },
+        {
+            "name": "server",
+            "image": "areorrtwetb/multi-server",
+            "hostname": "api",
+            "essential": false
+        },
+        {
+            "name": "worker",
+            "image": "areorrtwetb/multi-worker",
+            "hostname": "worker",
+            "essential": false
+        },
+        {
+            "name": "nginx",
+            "image": "areorrtwetb/multi-nginx",
+            "hostname": "nginx",
+            "essential": true
+        }
+    ]
+}
